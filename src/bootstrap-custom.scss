@@ -1,0 +1,54 @@
+// Tema Roda Bonito: rojo y negro, sobre la base de Bootstrap 5.
+$primary: #d81c34;
+$secondary: #5a6472;
+$success: #1f7d4c;
+$warning: #c98a0b;
+$danger: #d81c34;
+$dark: #15141a;
+$light: #f4f2ef;
+
+$body-bg: #f4f2ef;
+$body-color: #1d2330;
+
+$link-color: $primary;
+$link-hover-color: #a3101f;
+$link-decoration: none;
+
+$font-family-sans-serif: "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+$headings-font-family: "Barlow Condensed", "Inter", system-ui, sans-serif;
+$headings-font-weight: 700;
+$headings-line-height: 1.1;
+
+$border-radius: 0.75rem;
+$border-radius-sm: 0.5rem;
+$border-radius-lg: 1rem;
+$border-radius-pill: 50rem;
+
+$btn-border-radius: $border-radius-pill;
+$btn-border-radius-sm: $border-radius-pill;
+$btn-border-radius-lg: $border-radius-pill;
+$btn-font-weight: 600;
+$btn-padding-x: 1.1rem;
+
+$input-bg: #fff;
+$input-border-color: #dedad6;
+$input-focus-border-color: #e8707f;
+$form-select-border-color: #dedad6;
+
+$card-border-radius: $border-radius-lg;
+$card-border-color: rgba(21, 20, 26, 0.06);
+$card-box-shadow: 0 1px 2px rgba(21, 20, 26, 0.04), 0 4px 16px rgba(21, 20, 26, 0.05);
+
+$list-group-border-color: #ebe7e3;
+
+$nav-pills-border-radius: $border-radius-pill;
+$nav-pills-link-active-bg: $dark;
+
+$table-striped-bg: rgba(21, 20, 26, 0.03);
+$table-border-color: #ebe7e3;
+
+$badge-font-weight: 600;
+
+$enable-shadows: false;
+
+@import "bootstrap/scss/bootstrap";

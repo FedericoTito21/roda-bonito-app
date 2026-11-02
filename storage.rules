@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// UID de la cuenta admin (federicomathias@gmail.com). Si cambia el admin,
+// actualizar este valor (Firebase Storage no evalúa de forma confiable
+// las consultas cruzadas a Firestore, por eso va fijo en vez de leer el rol).
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /fotos/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.resource.size < 5 * 1024 * 1024
+        && (request.auth.uid == uid || request.auth.uid == 'Ln7QGfUMyOhixOETgqbkDZy9Tkh1');
+      allow delete: if request.auth != null
+        && (request.auth.uid == uid || request.auth.uid == 'Ln7QGfUMyOhixOETgqbkDZy9Tkh1');
+    }
+  }
+}

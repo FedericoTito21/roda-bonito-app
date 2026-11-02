@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "liga-amigos-61aab"
+  },
+  "targets": {
+    "liga-amigos-61aab": {
+      "hosting": {
+        "main": [
+          "liga-amigos-61aab"
+        ],
+        "rodabonito": [
+          "roda-bonito"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

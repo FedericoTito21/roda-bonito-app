@@ -1,0 +1,80 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function miRol() {
+      return isSignedIn()
+        ? get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.role
+        : null;
+    }
+    function isAdmin() { return miRol() == 'admin'; }
+    function isEntrenador() { return miRol() == 'entrenador'; }
+    function isCapitan() { return miRol() == 'capitan'; }
+    function isStaff() { return isAdmin() || isEntrenador() || isCapitan(); }
+
+    match /usuarios/{uid} {
+      allow read: if true;
+      allow create: if isAdmin() || (
+        request.auth.uid == uid &&
+        (
+          (request.resource.data.role == 'jugador' && request.resource.data.isPlayer == true) ||
+          (request.auth.token.email == 'federicomathias@gmail.com' && request.resource.data.role == 'admin')
+        )
+      );
+      allow delete: if isAdmin();
+      allow update: if isAdmin()
+        || (request.auth.uid == uid
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['nombre','apellidos','posicionPrincipal','posicionesSecundarias','altura','peso','perfilCompleto','fotoURL','dorsal']));
+    }
+
+    match /eventos/{eventoId} {
+      allow read: if true;
+      allow create: if isSignedIn() && (
+        isAdmin() ||
+        (request.resource.data.tipo == 'entrenamiento' && isEntrenador()) ||
+        ((request.resource.data.tipo == 'oficial' || request.resource.data.tipo == 'copa') && isCapitan()) ||
+        (request.resource.data.tipo == 'amistoso' && (isCapitan() || miRol() == 'jugador'))
+      );
+      allow update: if isStaff();
+      allow delete: if isAdmin();
+
+      match /disponibilidad/{uid} {
+        allow read: if true;
+        allow write: if isSignedIn() && (request.auth.uid == uid || isStaff());
+      }
+    }
+
+    // Datos públicos de la federación; solo los escribe la Cloud Function.
+    match /competiciones/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /solicitudesActualizacion/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['uid', 'creadoEn'])
+        && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    match /tableros/{id} {
+      allow read: if isStaff();
+      allow create, update, delete: if isStaff();
+    }
+
+    match /anuncios/{id} {
+      allow read: if true;
+      allow create: if isStaff();
+      allow update: if isStaff();
+      allow delete: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
